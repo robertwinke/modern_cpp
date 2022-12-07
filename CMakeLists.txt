@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-#set( CMAKE_CXX_COMPILER "C:\\mingw64\\bin\\g++" )
-#set( CMAKE_C_COMPILER "C:\\mingw64\\bin\\gcc" )
-
-
 project(empty_project)
-
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
