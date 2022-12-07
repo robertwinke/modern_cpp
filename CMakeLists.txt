@@ -5,7 +5,7 @@ project(empty_project)
 include(GNUInstallDirs)
 
 set(SRCS
-    ${CMAKE_SOURCE_DIR}/src/main.cpp
+    ${CMAKE_SOURCE_DIR}/src/move_semantics_main.cpp
 )
 
 set(PUBLIC_HEADERS

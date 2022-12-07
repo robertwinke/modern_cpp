@@ -56,10 +56,10 @@ public:
     virtual ~String()
     {
         std::cout << "Destroyed\n";
-        delete m_data;
+        delete [] m_data;
     }
 
-    void Print()
+    void Print() const
     {
         for (size_t i = 0; i < m_size; ++i) {
             std::cout << m_data[i];
@@ -68,7 +68,7 @@ public:
     }
 
 private:
-    size_t m_size;
+    size_t m_size = 0;
     char* m_data = nullptr;
 };
 
@@ -90,22 +90,49 @@ private:
     String m_name;
 };
 
+
+
+void process(const String& lvalArg)
+{
+    std::cout << "process lvalArg: ";
+    lvalArg.Print();
+}
+
+void process(String&& rvalArg)
+{
+    std::cout << "process rvalArg: ";
+    rvalArg.Print();
+}
+
+template<typename T>
+void logAndProcess(T&& param) // param here is an lvalue like every function parameter
+{
+    std::cout << "log param\n";
+    process(std::forward<T>(param));  //conditional cast: it casts to an rvalue only if its argument was initialized with an rvalue 
+    //process(param);
+}
+
+
 int main() {
 
     //move ctor
+    //String name("fooo");
     //Entity entity(std::move(name));
-    Entity entity("foo");
+    //Entity entity("foo");
 
-    String name("fooo");
     //move ctor
-    String other_name = std::move(name);
+    //String name("fooo");
+    //String other_name = std::move(name);
 
-    String other;
     //move assignemnt
-    other = std::move(other_name);
+    //String other;
+    //other = std::move(other_name);
 
-    entity.PrintName();
+    //perfect forwarding
+    String name("fooo");
+    logAndProcess(name);
+    logAndProcess(std::move(name));
+    logAndProcess("alma");
 
-    std::cin.get();
     return 0;
 }
