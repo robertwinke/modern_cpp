@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <chrono>
 
 class String {
 public:
@@ -105,11 +106,20 @@ void process(String&& rvalArg)
 }
 
 template<typename T>
-void logAndProcess(T&& param) // param here is an lvalue like every function parameter
+void logAndProcess(T&& param) // param here is a universal reference
 {
     std::cout << "log param\n";
     process(std::forward<T>(param));  //conditional cast: it casts to an rvalue only if its argument was initialized with an rvalue 
     //process(param);
+}
+
+
+int fibonacci(int n) {
+
+    if (n <= 1) {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
 
@@ -133,6 +143,23 @@ int main() {
     logAndProcess(name);
     logAndProcess(std::move(name));
     logAndProcess("alma");
+
+
+
+    auto measureFunctionTime = 
+            [](auto&& func, auto&&... params) // func is universal reference, params is universal reference parameter pack
+        {
+            std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
+            std::forward<decltype(func)>(func)(
+                std::forward<decltype(params)>(params)...
+            );
+            
+            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+            std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
+        };
+
+    measureFunctionTime(fibonacci, 45);
 
     return 0;
 }
